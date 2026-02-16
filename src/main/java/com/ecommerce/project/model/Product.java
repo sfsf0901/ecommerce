@@ -20,11 +20,12 @@ public class Product {
     @NotBlank
     @Size(min = 3, message = "Product name must contain al least 3 characters.")
     private String productName;
-    private String image;
 
     @NotBlank
     @Size(min = 6, message = "Product name must contain al least 6 characters.")
     private String description;
+
+    private String image;
     private Integer quantity;
     private double price;
     private double discount;
