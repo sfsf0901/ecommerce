@@ -15,7 +15,12 @@ import java.util.Set;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "users")
+@Table(name = "users",
+        uniqueConstraints = {
+        @UniqueConstraint(columnNames = "username"),
+        @UniqueConstraint(columnNames = "email")
+        }
+)
 public class User {
 
     @Id
@@ -24,7 +29,8 @@ public class User {
 
     @NotBlank
     @Size(max = 20)
-    private String username;
+    @Column(name = "username")
+    private String userName;
 
     @NotBlank
     @Size(max = 50)
@@ -44,8 +50,13 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    public User(String username, String email, String password) {
-        this.username = username;
+    @OneToMany(mappedBy = "user",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            orphanRemoval = true)
+    private Set<Product> products = new HashSet<>();
+
+    public User(String userName, String email, String password) {
+        this.userName = userName;
         this.email = email;
         this.password = password;
     }
