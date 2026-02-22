@@ -1,13 +1,15 @@
 package com.ecommerce.project.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor
-@Data
 @Table(name = "roles")
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class Role {
 
     @Id
