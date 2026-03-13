@@ -6,6 +6,7 @@ import com.ecommerce.project.model.Cart;
 import com.ecommerce.project.model.CartItem;
 import com.ecommerce.project.model.Product;
 import com.ecommerce.project.payload.CartDTO;
+import com.ecommerce.project.payload.CartItemDTO;
 import com.ecommerce.project.payload.ProductDTO;
 import com.ecommerce.project.repositories.CartItemRepository;
 import com.ecommerce.project.repositories.CartRepository;
@@ -89,6 +90,26 @@ public class CartServiceImpl implements CartService {
         return cartDTO;
     }
 
+    @Override
+    public List<CartDTO> getAllCarts() {
+        List<Cart> carts = cartRepository.findAll();
+
+        if (carts.size() == 0) {
+            throw new APIException("No cart exists");
+        }
+
+        List<CartDTO> cartDTOS = carts.stream().map(cart -> {
+                    CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
+
+                    List<ProductDTO> products = cart.getCartItems().stream()
+                            .map(p -> modelMapper.map(p, ProductDTO.class)).toList();
+                    cartDTO.setProducts(products);
+                    return cartDTO;
+                }).toList();
+
+        return cartDTOS;
+    }
+
     private Cart createCart() {
         Cart userCart = cartRepository.findCartByEmail(authUtil.loggedInEmail());
         if (userCart != null) {
@@ -101,4 +122,5 @@ public class CartServiceImpl implements CartService {
         Cart newCart = cartRepository.save(cart);
         return newCart;
     }
+
 }
