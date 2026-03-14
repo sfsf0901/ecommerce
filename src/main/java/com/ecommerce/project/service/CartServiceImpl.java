@@ -6,7 +6,6 @@ import com.ecommerce.project.model.Cart;
 import com.ecommerce.project.model.CartItem;
 import com.ecommerce.project.model.Product;
 import com.ecommerce.project.payload.CartDTO;
-import com.ecommerce.project.payload.CartItemDTO;
 import com.ecommerce.project.payload.ProductDTO;
 import com.ecommerce.project.repositories.CartItemRepository;
 import com.ecommerce.project.repositories.CartRepository;
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -108,6 +106,20 @@ public class CartServiceImpl implements CartService {
                 }).toList();
 
         return cartDTOS;
+    }
+
+    @Override
+    public CartDTO getCart(String emailId, Long cartId) {
+        Cart cart = cartRepository.findCartByEmailAndCartId(emailId, cartId);
+        if (cart == null) {
+            throw new ResourceNotFoundException("Cart", "cartId", cartId);
+        }
+        CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
+        cart.getCartItems().forEach(c -> c.getProduct().setQuantity(c.getQuantity()));
+        List<ProductDTO> products = cart.getCartItems().stream()
+                .map(p -> modelMapper.map(p, ProductDTO.class)).toList();
+        cartDTO.setProducts(products);
+        return cartDTO;
     }
 
     private Cart createCart() {
