@@ -1,7 +1,6 @@
 package com.ecommerce.project.service;
 
 import com.ecommerce.project.payload.CartDTO;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
