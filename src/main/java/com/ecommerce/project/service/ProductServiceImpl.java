@@ -89,7 +89,7 @@ public class ProductServiceImpl implements ProductService {
                 ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
 
-        Specification<Product> spec = Specification.where((Specification<Product>) null);
+        Specification<Product> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
 
         if (keyword != null && !keyword.isEmpty()) {
             spec = spec.and((root, query, criteriaBuilder) ->
